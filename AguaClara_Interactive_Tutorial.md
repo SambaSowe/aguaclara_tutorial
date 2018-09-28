@@ -1,9 +1,10 @@
 # Using Python and Running it With Hydrogen in Markdown
 
 ## Running Code With Hydrogen
-1. Below this, I've copied the code I wrote for the [Writing Python](https://github.com/AguaClara/aguaclara_tutorial/wiki/Writing Python) tutorial. You should familiarize yourself with the different Hydrogen commands using this code. For the first line, use `Hydrogen: Run` (`Cmnd + Enter`).
-2. For the second line, use `Hydrogen: Run and Move Down` (`Shift + Enter`).
-3. For the remaining code, highlight it with your cursor and use `Hydrogen: Run`. What is the difference between the three?
+1. Below this, I've copied the code I wrote for the [Writing Python](https://github.com/AguaClara/aguaclara_tutorial/wiki/Writing Python) tutorial. You should familiarize yourself with the different Hydrogen commands using this code. For the first line, use `Hydrogen: Run` (`Cmnd + Enter`). Just puts a check mark next to the line of code.
+2. For the second line, use `Hydrogen: Run and Move Down` (`Shift + Enter`). Runs the code and puts the cursor at the beginning of the next line.
+3. For the remaining code, highlight it with your cursor and use `Hydrogen: Run`. What is the difference between the three? Runs all of the highlighted code.
+
 
 ```python
 from aide_design.play import*
@@ -30,15 +31,29 @@ plt.show()
 These questions are meant to test what you've learned from the Python Basics tutorial. If you need help answering a question, refer there first and use other online resources before seeking a Subteam Lead or RA. Be sure to run all your code with Hydrogen. When you code, make sure your using proper [variable naming](https://github.com/AguaClara/aide_design/wiki/Variable-Naming) and [coding standards](https://github.com/AguaClara/aide_design/wiki/Standards)
 
 1. Write a conditional statement with 3 conditions: when x is 10, when x is 1, and when x is anything other than 1 or 10. For each condition, have your code print what the value is or isn't.
-
-<!--- Fill you answer here. --->
+```python
+x = 1
+if x == 10:
+  print(x)
+elif x == 1:
+  print(x)
+else:
+  print('x is not 1 or 10')
+```
 
 
 
 
 2. Write a `for` loop that takes a variable with an initial value of 0, and adds the current index to the previous value of that variable (i.e. you variable should grow in size every iteration). Perform the iteration 20 times, and have the final value be printed at the end.
 
-<!--- Fill you answer here. --->
+```python
+counter = 0
+x = 0
+for counter in range(0,21):
+  x = x + counter
+  counter = counter + 1
+print(x)
+```
 
 
 
@@ -50,13 +65,26 @@ These questions are meant to test what you've learned from the Python Basics tut
 
 3. Using the NumPy package and `unit_registry`, calculate the value of sin(4) meters, and use the sigfig function from the unit unit_registry module in aide_design to get your answer to 2 sig-figs. *(Hint: You will need to import these packages. Remember how to do that?)*
 
-<!--- Fill you answer here. --->
+```python
+from aide_design.play import*
+answer = np.sin(4)*u.meter
+u.default_format = '.2f'
+print(answer)
+```
 
 
 
 4. Create a `list` of length 5, and verify the length of your list. Once you've done that, turn your `list` into an `array` and apply units of meters to it. After that, create a 5x5 `array`, extract the middle row and middle column. Verify the size of your 2D `array` and apply units of liters to it.
 
-<!--- Fill you answer here. --->
+```python
+numList = [0,1,2,3,4]
+len(numList)
+numArray = np.array(numList)*u.meter
+fiveByFive = np.array([[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]])*u.liter
+fiveByFive[:,2]
+fiveByFive[2,:]
+np.size(fiveByFive)
+```
 
 
 
@@ -79,13 +107,39 @@ from scipy.constants import Boltzmann as kB_sc # I've imported the unitless valu
 
 kB = kB_sc * u.joule / u.kelvin # I've given kB units for you in J/K; you can use the kB variable to give you Boltzmann's constant with units
 
-# Write your code here
+from aide_design.play import*
+def diffusionCalc(T, eta, r):
+  T = T*u.kelvin
+  eta = eta*u.kilogram/u.meter/u.second
+  r = r*u.meter
+  D = kB*T/(6*(np.pi)*eta*r).to_base_units()
+  return D
+diffusionCalc(300,.1,.1)
 
 ```
 
 6. You have a pipe with a radius of 0.2 m with water flowing in it at 2 m<sup>3</sup>/s. You want to see how the Reynolds Number changes as viscosity changes due to a change in temperature from 0 to 200<sup>o</sup>C. Create a plot of Reynolds Number against Temperature in Kelvin to show a relationship. Make sure your plot has a title, labeled axes, and axes grid. You can use functions from `physchem` like `pc.re_pipe` and `pc.viscosity_kinematic`. *(Hint: Make an array of temperatures to input into the `pc.viscosity_kinematic` function)*. Make sure to save you plot to your images folder in your personal repository, and display it below using `plt.show()` and a relative file path to the image.
 
-<!--- Fill you answer here. --->
+```python
+from aide_design.play import*
+flowRate = 2
+radius = .2
+Area = np.pi*radius*radius
+T = np.array([273,323,373,423,473])
+velocity = flowRate/Area
+velocity
+plt.plot(T,pc.re_pipe(velocity,2*radius,pc.viscosity_kinematic(T)),'-',label = 'Reynolds Number')
+plt.xlabel('Temperature (Kelvins)')
+plt.ylabel('Reynolds Number')
+plt.title('Reynolds Number vs Temperature')
+plt.minorticks_on()
+plt.grid(which='major')
+plt.grid(which = 'minor')
+plt.legend(loc = 'lower right', ncol = 1)
+plt.tight_layout()
+plt.savefig('/Users/Sowe/github/Personal/Images/Reynolds_Number.png')
+plt.show()
+```
 
 
 # GitHub Basics
